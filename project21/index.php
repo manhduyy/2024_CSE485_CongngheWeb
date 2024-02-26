@@ -1,94 +1,95 @@
+<?php
+$products = [
+    [
+        "id" => 1,
+        "name" => "T-Shirt",
+        "price" => 15.99,
+        "description" => "A comfortable and stylish T-Shirt."
+    ],
+    [
+        "id" => 2,
+        "name" => "Jean",
+        "price" => 23,
+        "description" => "A comfortable and stylish Jean."
+    ],
+    [
+        "id" => 3,
+        "name" => "Sneakers",
+        "price" => 39.99,
+        "description" => "Sporty and trendy sneakers."
+    ],
+    [
+        "id" => 4,
+        "name" => "Hoodie",
+        "price" => 29.99,
+        "description" => "A cozy hoodie for chilly days."
+    ],
+    [
+        "id" => 5,
+        "name" => "Dress",
+        "price" => 49.99,
+        "description" => "Elegant dress for special occasions."
+    ],
+    [
+        "id" => 6,
+        "name" => "Shorts",
+        "price" => 19.99,
+        "description" => "Casual and comfortable shorts."
+    ]
+];
+
+// Đặt số mục trên mỗi trang
+$itemsPerPage = 2;
+
+// Truy cập số trang hiện tại từ URL bằng cách sử dụng GET
+$currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+
+// Tính tổng số trang
+$totalPages = ceil(count($products) / $itemsPerPage);
+
+// Sử dụng hàm array_slice để lấy các mục cho trang hiện tại
+$currentPageItems = array_slice($products, ($currentPage - 1) * $itemsPerPage, $itemsPerPage);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Danh mục sản phẩm</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f4f4f4;
-    }
-
-    .container {
-        width: 80%;
-        margin: 20px auto;
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .products {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-    }
-
-    .product {
-        width: calc(33.33% - 20px);
-        margin-bottom: 20px;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 10px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .pagination {
-        margin-top: 20px;
-    }
-
-    .pagination a {
-        text-decoration: none;
-        padding: 8px 16px;
-        border: 1px solid #ddd;
-        color: #333;
-        border-radius: 3px;
-        margin: 0 5px;
-    }
-
-    .pagination a.active {
-        background-color: #007bff;
-        color: #fff;
-        border: 1px solid #007bff;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div class="container">
-    <h2>Danh mục sản phẩm</h2>
-    <div class="products">
-        <?php
-        // Include your PHP code to fetch products from the database
-        // For demonstration purposes, let's assume you have an array of products
-        $products = array(
-            array("id" => 1, "name" => "Sản phẩm 1"),
-            array("id" => 2, "name" => "Sản phẩm 2"),
-            array("id" => 3, "name" => "Sản phẩm 3"),
-            array("id" => 4, "name" => "Sản phẩm 4"),
-            array("id" => 5, "name" => "Sản phẩm 5"),
-            array("id" => 6, "name" => "Sản phẩm 6"),
-            array("id" => 7, "name" => "Sản phẩm 7"),
-            array("id" => 8, "name" => "Sản phẩm 8"),
-            array("id" => 9, "name" => "Sản phẩm 9"),
-        );
+    <h1>Product List</h1>
 
-        // Loop through products and display them
-        foreach ($products as $product) {
-            echo '<div class="product">' . $product['name'] . '</div>';
-        }
-        ?>
+    <div class="product-list">
+        <?php foreach ($currentPageItems as $product): ?>
+            <div class="product">
+                <h2><?php echo $product['name']; ?></h2>
+                <p>Price: $<?php echo $product['price']; ?></p>
+                <p>Description: <?php echo $product['description']; ?></p>
+            </div>
+        <?php endforeach; ?>
     </div>
 
     <div class="pagination">
-        <a href="#" class="active">1</a>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">Next</a>
+        <?php if ($currentPage > 1): ?>
+            <a href="?page=<?php echo $currentPage - 1; ?>">Previous</a>
+        <?php endif; ?>
+        
+        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+            <?php if ($i == $currentPage): ?>
+                <span class="active"><?php echo $i; ?></span>
+            <?php else: ?>
+                <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+            <?php endif; ?>
+        <?php endfor; ?>
+        
+        <?php if ($currentPage < $totalPages): ?>
+            <a href="?page=<?php echo $currentPage + 1; ?>">Next</a>
+        <?php endif; ?>
     </div>
 </div>
 
